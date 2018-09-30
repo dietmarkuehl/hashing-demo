@@ -44,7 +44,7 @@ class type_erased_hash_code {
       type_erased_hash_code hash_code, unsigned char const* begin,
       unsigned char const* end) {
     hash_code.wrapper_(begin, end);
-    return std::move(hash_code);
+    return hash_code;
   }
 };
 

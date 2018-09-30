@@ -22,7 +22,7 @@ namespace hashing {
 // Implementation of FNV-1a hash algorithm, based on the implementation
 // in N3980.
 class fnv1a {
-  std::size_t state_ = 14695981039346656037u;
+  unsigned long long state_ = 14695981039346656037u;
 
  public:
   using result_type = size_t;
@@ -109,7 +109,7 @@ class fnv1a {
 // optimization for uniquely-represented types, because different
 // types may use different internal representations of the same value.
 class type_invariant_fnv1a {
-  std::size_t state_ = 14695981039346656037u;
+  unsigned long long state_ = 14695981039346656037u;
 
  public:
   using result_type = size_t;

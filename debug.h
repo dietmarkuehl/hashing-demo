@@ -46,7 +46,7 @@ class identity {
   }
 
   friend identity hash_combine(identity code) {
-    return std::move(code);
+    return code;
   }
 
   template <typename InputIterator>
@@ -63,7 +63,7 @@ class identity {
   friend identity hash_combine_range(identity code, const unsigned char* begin,
       const unsigned char* end) {
     code.hash_input_.append(begin, end);
-    return std::move(code);
+    return code;
   }
 
   explicit operator result_type() && {
