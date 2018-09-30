@@ -153,6 +153,7 @@ HashCode hash_sized_container(
 }
 }  // namespace detail
 
+namespace hash_value_detail {
 template <typename HashCode, typename Integral>
 enable_if_t<is_integral<Integral>::value || is_enum<Integral>::value,
             HashCode>
@@ -240,6 +241,31 @@ template <typename HashCode, typename... Ts>
 HashCode hash_value(HashCode code, const tuple<Ts...>& t) {
   return detail::hash_tuple(
       std::move(code), t, make_index_sequence<sizeof...(Ts)>());
+}
+
+struct hash_value_aux {
+    template <typename HashCode, typename... T>
+    auto operator()(HashCode code, T&&... values) const
+        -> decltype(hash_value(std::move(code), std::forward<T>(values)...)) {
+        return hash_value(std::move(code), std::forward<T>(values)...);
+    }
+};
+
+} // namespace hash_value_detail
+
+inline constexpr hash_value_detail::hash_value_aux hash_value{};
+
+inline namespace vector_detail {
+template <typename T>
+ struct std_vector
+    : std::vector<T> {
+    using std::vector<T>::vector;
+
+    template <typename HashCode>
+    friend HashCode hash_value(HashCode code, std_vector const& v) {
+        return detail::hash_sized_container(std::move(code), v);
+    }
+ };
 }
 
 // Dummy implementation of N4183 (contiguous iterator utilities), so

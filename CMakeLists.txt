@@ -13,7 +13,7 @@ add_subdirectory(${benchmark_src_dir} benchmark EXCLUDE_FROM_ALL)
 set_property(DIRECTORY ${gtest_src_dir} APPEND PROPERTY COMPILE_DEFINITIONS GTEST_HAS_TR1_TUPLE=0)
 set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS GTEST_HAS_TR1_TUPLE=0)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1y -Wall")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -Wall")
 
 enable_testing()
 

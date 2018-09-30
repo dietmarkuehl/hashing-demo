@@ -33,20 +33,23 @@ struct Hashable {
 };
 
 TEST(StdTest, QualifiedHashValue) {
-    unsigned int    value{17u};
-    Hashable        hashable{1};
+    unsigned int          value{17u};
+    Hashable              hashable{1};
+    std_::std_vector<int> values{ 1, 2, 3 };
 
     // most desirable
     std_::hash_code::state_type state1{};
     std_::hash_code             code1(&state1);
     code1 = std_::hash_value(std::move(code1), value);
-    code1 = /*-dk:TODO std_::*/hash_value(std::move(code1), hashable);
+    code1 = std_::hash_value(std::move(code1), hashable);
+    code1 = std_::hash_value(std::move(code1), values);
 
-    // outright crazy-talk: should know where hash_value came from
+    // built-in types fro std, everything else automtaically looked up
     std_::hash_code::state_type state2{};
     std_::hash_code             code2(&state2);
     code2 = std_::hash_value(std::move(code2), value);
     code2 = hash_value(std::move(code2), hashable);
+    code2 = hash_value(std::move(code2), values);
 
     std::size_t result3{};
     {
@@ -56,18 +59,20 @@ TEST(StdTest, QualifiedHashValue) {
         hash_code             code3(&state3);
         code3 = hash_value(std::move(code3), value);
         code3 = hash_value(std::move(code3), hashable);
+        code3 = hash_value(std::move(code3), values);
         result3 = static_cast<std::size_t>(std::move(code3));
     }
 
     std::size_t result4{};
     {
-        // reasonable but hard to teach
+        // reasonable but apparently hard to teach
         std_::hash_code::state_type state4{};
         std_::hash_code             code4(&state4);
 
         using std_::hash_value;
         code4 = hash_value(std::move(code4), value);
         code4 = hash_value(std::move(code4), hashable);
+        code4 = hash_value(std::move(code4), values);
         result4 = static_cast<std::size_t>(std::move(code4));
     }
 
