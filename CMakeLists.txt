@@ -1,7 +1,7 @@
 cmake_minimum_required (VERSION 2.8.12)
 project (hashing-demo CXX)
 
-set(gtest_src_dir /usr/src/gtest CACHE PATH "Path to gtest source root")
+set(gtest_src_dir googletest CACHE PATH "Path to gtest source root")
 set(benchmark_src_dir benchmark)
 
 add_subdirectory(${gtest_src_dir} gtest EXCLUDE_FROM_ALL)
