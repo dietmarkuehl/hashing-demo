@@ -157,7 +157,7 @@ inline farmhash hash_combine_range(
   unsigned char* const buffer =
       reinterpret_cast <unsigned char*>(hash_code.state_->buffer_);
   const size_t buffer_remaining = buffer + 64 - hash_code.buffer_next_;
-  if (end - begin <= buffer_remaining) {
+  if (std::size_t(end - begin) <= buffer_remaining) {
     // The input will not saturate the buffer, so we just copy it.
     memcpy(hash_code.buffer_next_, begin, end - begin);
     hash_code.buffer_next_ += (end - begin);

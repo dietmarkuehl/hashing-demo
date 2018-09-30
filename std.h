@@ -51,7 +51,7 @@ struct hash {
   template <typename U = T>
   enable_if_t<detail::supports_hash_value<U>::value,
               size_t>
-  operator()(const U& u) {
+  operator()(const U& u) const {
     hashing::farmhash::state_type state;
     return hashing::farmhash::result_type(
         hash_combine(hashing::farmhash{&state}, u));

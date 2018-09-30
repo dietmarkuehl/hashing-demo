@@ -21,7 +21,7 @@
 // String class that uses string interning to represent the contents.
 // This makes things like hashing and comparison extremely efficient.
 class InternedString {
-  static std::set<const std::string> intern_pool_;
+  static std::set<std::string> intern_pool_;
   const std::string* str_;
 
  public:
@@ -47,7 +47,7 @@ class InternedString {
   }
 };
 
-std::set<const std::string> InternedString::intern_pool_{};
+std::set<std::string> InternedString::intern_pool_{};
 
 namespace std_ {
 

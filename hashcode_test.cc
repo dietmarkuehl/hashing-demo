@@ -192,7 +192,7 @@ TYPED_TEST_P(HashCodeTest, HashNonUniquelyRepresentedType) {
   unsigned char buffer2[kNumStructs * sizeof(StructWithPadding)];
   std::memset(buffer1, 255, sizeof(buffer2));
   auto* s2 = reinterpret_cast<StructWithPadding*>(buffer2);
-  for (int i = 0; i < kNumStructs; ++i) {
+  for (size_t i = 0; i < kNumStructs; ++i) {
     SCOPED_TRACE(i);
     s1[i].c = s2[i].c = '0' + i;
     s1[i].i = s2[i].i = i;
