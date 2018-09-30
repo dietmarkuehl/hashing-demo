@@ -32,6 +32,52 @@ struct Hashable {
   }
 };
 
+TEST(StdTest, QualifiedHashValue) {
+    unsigned int    value{17u};
+    Hashable        hashable{1};
+
+    // most desirable
+    std_::hash_code::state_type state1{};
+    std_::hash_code             code1(&state1);
+    code1 = std_::hash_value(std::move(code1), value);
+    code1 = /*-dk:TODO std_::*/hash_value(std::move(code1), hashable);
+
+    // outright crazy-talk: should know where hash_value came from
+    std_::hash_code::state_type state2{};
+    std_::hash_code             code2(&state2);
+    code2 = std_::hash_value(std::move(code2), value);
+    code2 = hash_value(std::move(code2), hashable);
+
+    std::size_t result3{};
+    {
+        // not ideal but the reality
+        using namespace std_;
+        hash_code::state_type state3{};
+        hash_code             code3(&state3);
+        code3 = hash_value(std::move(code3), value);
+        code3 = hash_value(std::move(code3), hashable);
+        result3 = static_cast<std::size_t>(std::move(code3));
+    }
+
+    std::size_t result4{};
+    {
+        // reasonable but hard to teach
+        std_::hash_code::state_type state4{};
+        std_::hash_code             code4(&state4);
+
+        using std_::hash_value;
+        code4 = hash_value(std::move(code4), value);
+        code4 = hash_value(std::move(code4), hashable);
+        result4 = static_cast<std::size_t>(std::move(code4));
+    }
+
+
+    EXPECT_EQ(static_cast<std::size_t>(std::move(code1)),
+              static_cast<std::size_t>(std::move(code2)));
+    EXPECT_EQ(static_cast<std::size_t>(std::move(code1)), result3);
+    EXPECT_EQ(static_cast<std::size_t>(std::move(code1)), result4);
+}
+
 TEST(StdTest, UnorderedSetBasicUsage) {
   std_::unordered_set<Hashable> set1;
   set1.insert(Hashable{1});
@@ -45,6 +91,10 @@ TEST(StdTest, UnorderedSetBasicUsage) {
 TEST(StdTest, HashFloat) {
   EXPECT_EQ((std_::hash<float>{}(+0.0f)),
             (std_::hash<float>{}(-0.0f)));
+  EXPECT_EQ((std_::hash<double>{}(+0.0)),
+            (std_::hash<double>{}(-0.0)));
+  EXPECT_EQ((std_::hash<double>{}(+0.0l)),
+            (std_::hash<double>{}(-0.0l)));
 }
 
 struct LegacyHashable {

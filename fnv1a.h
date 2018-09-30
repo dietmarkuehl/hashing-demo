@@ -38,17 +38,6 @@ class fnv1a {
     return hash_combine(hash_value(hash_code, value), values...);
   }
 
-  // Base case of hash_combine: hash the bytes directly once we reach a
-  // uniquely-represented type.
-  template <typename T, typename... Ts>
-  friend std::enable_if_t<std_::is_uniquely_represented<T>::value,
-                          fnv1a>
-  hash_combine(fnv1a hash_code, const T& value, const Ts&... values) {
-    unsigned char const* bytes = reinterpret_cast<unsigned char const*>(&value);
-    return hash_combine(
-        hash_combine_range(hash_code, bytes, bytes + sizeof(value)), values...);
-  }
-
   // Base case of variadic template recursion.
   friend fnv1a hash_combine(fnv1a hash_code) { return hash_code; }
 
@@ -94,6 +83,17 @@ class fnv1a {
       ++begin;
     }
     return hash_code;
+  }
+
+  // Base case of hash_combine: hash the bytes directly once we reach a
+  // uniquely-represented type.
+  template <typename T, typename... Ts>
+  friend std::enable_if_t<std_::is_uniquely_represented<T>::value,
+                          fnv1a>
+  hash_combine(fnv1a hash_code, const T& value, const Ts&... values) {
+    unsigned char const* bytes = reinterpret_cast<unsigned char const*>(&value);
+    return hash_combine(
+        hash_combine_range(hash_code, bytes, bytes + sizeof(value)), values...);
   }
 
   explicit operator result_type() && noexcept { return state_; }
